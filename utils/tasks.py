@@ -12,7 +12,9 @@ class requirements:
 			self.completedWork = 0
 			self.completedEntertainment = 0
 			self.completedOther = 0
-	
+			
+			self.dayTotalTime = DayTotalTime
+
 	def getWorkDelta(self):
 		return self.totalWork - self.completedWork
 
