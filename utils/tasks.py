@@ -41,5 +41,3 @@ class task:
 				self.value = 100 - (taskValue / 100)
 			else:
 				self.value = 0.001
-
-t = requirements()

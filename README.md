@@ -1,4 +1,4 @@
-# Full Tank?
+# Gerenciador de Tarefas
 
 **Número da Lista**: 1<br>
 **Conteúdo da Disciplina**: Grafos 2<br>
@@ -16,7 +16,7 @@ Exercício 3193 do URI
 Adicione 3 ou mais screenshots do projeto em funcionamento.
 
 ## Instalação 
-**Linguagem**: xxxxxx<br>
+**Linguagem**: Python<br>
 **Framework**: (caso exista)<br>
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
