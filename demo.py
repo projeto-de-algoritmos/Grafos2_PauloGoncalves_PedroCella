@@ -41,7 +41,7 @@ for i in range(qtd_tarefas):
 		print("Por fim insira um valor que represente o peso da tarefa do seu ponto de vista. Um valor entre 1 e 100, sendo 1 - baixo e 100- alto\n")
 		valor = int(input("Valor da tarefa: "))
 
-		taskList.append(TKS.task(nome, tipo, valor))
+		taskList.append(TKS.task(nome, tipo, valor, True))
 
 # r = TKS.requirements()
 # t = TKS.task("Tomar Banho", 1, )

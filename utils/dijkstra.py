@@ -1,35 +1,20 @@
 import tasks as TSK
 import math
 
-
-
-
 class optimizer:
 	def __init__(self, requirements: TSK.requirements, taskList: list) -> None:
 		
 			self.requirements = requirements
 
+			self.taskList = taskList
 
-			self.buildGraph(taskList)
+			self.graph = {}
 
-	
-			# self.path = [("Acordar", 0), (ondeVeio, currentNode, Distance)]
 			self.path = [("Acordar", 0)]
 			self.priorityQueue = []
 
 			self.distances = {0: 0}
 			self.distancePrev = {}
-	# def getMinWeight(self):
-	# 	minValue = self.taskList[0].value
-	# 	minIndex = 0
-
-
-	# 	for index, currTask in enumerate(self.taskList):
-	# 		if currTask.value < minValue:
-	# 			minValue = currTask.value
-	# 			minIndex = index
-
-	# 	return [minValue, minIndex]
 
 	def addWithPriority(self, node, distance, instance):
 		self.priorityQueue.append((node, distance, instance))
@@ -40,52 +25,43 @@ class optimizer:
 	def extractMin(self):
 		pass
 
-	def resolveWeights(self):
+
+	def createNextNodeLine(self, currInstance: int):
 		
-		deltaWork = self.requirements.getWorkDelta()
-		deltaEntertainment = self.requirements.getEntertainmentDelta()
-		deltaOther = self.requirements.getOtherDelta()
+			if currInstance == 0:
+				self.graph.update({0: [TSK.task("Acordar", 4, 10000, True)]})
 
-		if deltaWork > deltaEntertainment and deltaWork > deltaOther:
-			priority = 1
-		elif deltaEntertainment > deltaWork and deltaEntertainment > deltaOther:
-			priority = 2
-		elif deltaOther > deltaWork and deltaOther > deltaEntertainment:
-			priority = 3
-		elif deltaWork == deltaEntertainment:
-			priority = 1
-		elif deltaEntertainment == deltaOther:
-			priority = 2
-		else:
-			priority = 3
+			else:
+				self.graph.update({currInstance: []})
 
-		for index, currTask in enumerate(self.taskList):
-			if currTask.type is priority:
-				self.taskList[index].value -= currTask.value * (1 / 100)
+				for node in self.graph.get(currInstance - 1):
+					if currInstance > 1:
+						self.graph[currInstance].append(TSK.task(node.name, node.type, node.value, False))
+					else:
+						self.graph.update({currInstance: self.taskList})
+			
+
+	def resolveWeights(self, currInstance: int):
+		
+
+		for index, currTask in enumerate(self.graph.get(currInstance)):
+			if currTask.type is self.requirements.getPriority():
+				self.graph.get(currInstance)[index].value -= currTask.value * (1 / 100)
 	
-	def buildGraph(self, taskList):
 
-		self.graph = {}
-
-		start = TSK.task("Acordar", 4, 10000)
-		end = TSK.task("Dormir", 4, 10000)
-
-		self.graph.update({0: [start]})
-
-		for i in range(1, self.requirements.dayTotalTime + 1):
-
-			self.graph.update({i: []})
-
-			for index, node in enumerate(taskList):
-
-				self.graph[i].append(TSK.task(taskList[index].name, taskList[index].type, taskList[index].value))
-				
-		self.graph.update({self.requirements.dayTotalTime + 1: [end]})
-
-		print(self.graph)
 	def dijkstra(self, depht: int):
-		instances = 0
 		
+		
+		for instance in range(0, depht + 1):
+			self.createNextNodeLine(instance)
+
+		for instance in range(0, depht + 1):
+			for node in self.graph.get(instance):
+				print(f"{node.name}, {node.type}, {node.value}: {instance}")
+			print("\n")
+		# print("")
+		# print(self.graph)
+
 		for instance in range(1, depht + 1):
 			inicialDist = [math.inf] * len(self.taskList)
 			inicialPrev = [(None, None)] * len(self.taskList) 
@@ -95,7 +71,7 @@ class optimizer:
 			for index, node in enumerate(self.taskList):
 				self.addWithPriority(node, self.distances[instance][index], instance)
 
-		print(self.priorityQueue)
+		# print(self.priorityQueue)
 		for instance in range(1, depht + 1):
 			pass
 
@@ -109,23 +85,13 @@ class optimizer:
 taskList = []
 
 
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 2, 5))
-taskList.append(TSK.task("Tomar Banho", 3, 9999))
-taskList.append(TSK.task("Tomar Banho", 2, 90))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 2, 5))
-taskList.append(TSK.task("Tomar Banho", 3, 9999))
-taskList.append(TSK.task("Tomar Banho", 2, 90))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 2, 5))
-taskList.append(TSK.task("Tomar Banho", 3, 9999))
-taskList.append(TSK.task("Tomar Banho", 2, 90))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
-taskList.append(TSK.task("Tomar Banho", 1, 5))
+taskList.append(TSK.task("a", 1, 5, True))
+taskList.append(TSK.task("b", 2, 5, True))
+taskList.append(TSK.task("c", 3, 5, True))
+taskList.append(TSK.task("d", 2, 90, True))
+
 
 t = optimizer(TSK.requirements(), taskList)
+
+
+t.dijkstra(150)
