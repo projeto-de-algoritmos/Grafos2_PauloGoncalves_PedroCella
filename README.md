@@ -10,15 +10,29 @@
 | 17/0113060 |  Pedro Vítor de Salles Cella |
 
 ## Sobre 
-Exercício 3193 do URI
 
 ## Screenshots
 Adicione 3 ou mais screenshots do projeto em funcionamento.
 
 ## Instalação 
 **Linguagem**: Python<br>
-**Framework**: (caso exista)<br>
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
+
+<p>Para usar nosso projeto primeiro deve-se ter instalado o Python3 e uma biblioteca do Python chamada prettytable, siga as etapas:</p>
+
+<p>Caso não tenha o Python3 instalado:</p>
+
+`sudo apt-get install python3`
+
+<p>Para instalar a biblioteca é bem simples, basta baixar pelo Linux ou baixar usando o pip</p>
+
+Linux<br>
+`sudo apt-get install -y python3-prettytable`
+
+Pip<br>
+`python -m pip install -U prettytable`
+
+**OBS:** Nós não conseguimos instalar pelo pip, por isso deixamos a opção do Linux caso passe pelo mesmo problema
+
 
 ## Uso 
 Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
