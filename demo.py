@@ -2,11 +2,11 @@ from utils import tasks as TKS
 
 taskList = []
 
-
+tempList = [["Estudar", "1", 50], ["Trabalhar", "1", 30], ["Dormir", 3, 20]]
 
 print("Bem-vindo(a) ao Gerenciador de Tarefas!\n")
 
-print("Para começar a utilizá-lo nos informe o numero de tarefas que deseja gerenciar,o nomde dessa tarefa, seu tipo e seu valor\n")
+print("Para começar a utilizá-lo nos informe o numero de tarefas que deseja gerenciar,o nome dessa tarefa, seu tipo e seu valor\n")
 
 qtd_tarefas = int(input("Quantas tarefas deseja realiar? Observação: Recomendamos X tarefas\nQuantidade de Tarefas: "))
 
@@ -34,6 +34,15 @@ for i in range(qtd_tarefas):
 					i.value = valor
 		else:
 			taskList.append(TKS.task(nome, tipo - 1, valor, True))
+
+# Tabela de Tarefas
+
+print("# Nome da Tarefa # Tipo de Tarefa # Valor da Tarefa #")
+
+for tarefa in tempList:
+	print("#",tarefa[0]," "*(13-len(tarefa[0])),"#",
+	tarefa[1]," "*(13-len(str(tarefa[1]))),"#",
+	tarefa[2]," "*(14-len(str(tarefa[2]))),"#")
 
 # r = TKS.requirements()
 # t = TKS.task("Tomar Banho", 1, )
