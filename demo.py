@@ -16,27 +16,12 @@ for i in range(qtd_tarefas):
 
 		print ("Que tipo de tarefa deseja adicionar")
 		tipo = int(input("1-Trabalho;\n2-Entreterimento;\n3-Outros\n"))
-
-		if tipo == 1:
-				tipo = 1
-		elif tipo == 2:
-				tipo = 2
-		elif tipo == 3:
-				tipo = 3
-		else:
-				print("Valor inserido inválido. Tente novamente")
-
-		while tipo < 1 or tipo > 3:
-				print ("Que tipo de tarefa deseja adicionar")
-				tipo = int(input("1-Trabalho;\n2-Entreterimento;\n3-Outros\n"))
-				if tipo == 1:
-						tipo = 1
-				elif tipo == 2:
-						tipo = 2
-				elif tipo == 3:
-						tipo = 3
-				else:
-						print("Valor inserido inválido. Tente novamente")
+	
+		while tipo not in range(1, len(TKS.needs().total) + 1):
+			print("\n\t\tValor inserido inválido. Tente novamente\n\n")
+			print ("Que tipo de tarefa deseja adicionar")
+			tipo = int(input("1-Trabalho;\n2-Entreterimento;\n3-Outros\n"))
+						
 
 		print("Por fim insira um valor que represente o peso da tarefa do seu ponto de vista. Um valor entre 1 e 100, sendo 1 - baixo e 100- alto\n")
 		valor = int(input("Valor da tarefa: "))

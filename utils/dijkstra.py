@@ -1,121 +1,132 @@
 import tasks as TSK
-import math
+from operator import itemgetter
 
 class optimizer:
 	def __init__(self, needs: TSK.needs, taskList: list) -> None:
-		
-			self.needs = needs
 
+			self.startNode = TSK.task("Acordar", 4, 10000, True)
+			self.endNode = TSK.task("Dormir", 4, 10000, True)
+
+			self.needs = needs
 			self.taskList = taskList
 
-			self.graph = {}
+			self.distances = {}
 
 
+	def timePassed(self, node):
+		tmpNode = node
+		totalInstances = 1
 
-	def resolveWeights(self, baseNode, newBaseNode=None):
+		while self.distances.get(tmpNode)[0].name != "Acordar":
+			tmpNode = self.distances.get(tmpNode)[0]
+			if not tmpNode:
+				break
+			totalInstances += 1
+		return totalInstances
+
+
+	def resolveWeights(self, baseNode, newNode):
 		
-		if newBaseNode:
-			if newBaseNode.type < 3:
-				self.needs.completed[newBaseNode.type] += 5
 
+		if baseNode.name == "Comer" and newNode.name == "Comer":
+			newNode.value = baseNode.value + 100
+			print("Rolo")
 
-
-	def createNextNodeLine(self, currInstance: int):
-		
-			if currInstance == 0:
-				self.graph.update({0: [TSK.task("Acordar", 4, 10000, True)]})
-
-			elif currInstance == self.needs.dayTotalTime + 1:
-				self.graph.update({currInstance: [TSK.task("Dormir", 4, 10000, True)]})
-
-			else:
-				self.graph.update({currInstance: []})
-
-				for node in self.graph.get(currInstance - 1):
-					if currInstance > 1:
-						self.graph[currInstance].append(TSK.task(node.name, node.type, node.value, False))
-					else:
-						self.graph.update({currInstance: self.taskList})
+		elif newNode.name == "Comer" and self.timePassed(baseNode) in [x for x in range(3, self.needs.dayTotalTime, 3)]:
+			print("Olas")
+			newNode.value -= newNode.value * (1.5 / 100)
+		print(self.needs.getPriority())
+		if newNode.type is self.needs.getPriority():
 			
+			newNode.value -= newNode.value * (0.5 / 100)
+			self.needs.resetCompleted()
+				
 
-			for index, currTask in enumerate(self.graph.get(currInstance)):
-				if currTask.type is self.needs.getPriority():
-					self.graph.get(currInstance)[index].value -= currTask.value * (1 / 100)
-					
+	def countTasksDone(self, node):
+		
+		tmpNode = node
+		valueToSum = 1
+		while self.distances[tmpNode][0].name != "Acordar":
+			self.needs.addToCompleted(self.distances[tmpNode][0].type, valueToSum)
+			tmpNode = self.distances.get(tmpNode)[0]
+			# print(tmpNode)
 
-				if currTask.name == "Comer" and currInstance in [x for x in range(3, self.needs.dayTotalTime, 3)]:
-					self.graph.get(currInstance)[index].value -= currTask.value * (1.5/100)
+
+	def createNextNodeLine(self, baseNode):
+			newDistances = []
+
+			if self.timePassed(baseNode) >= self.needs.dayTotalTime or not baseNode:
+				return False			
+			
+			for tmpNode in self.taskList:
+
+				newNode = TSK.task(tmpNode.name, tmpNode.type, tmpNode.value, False)
+
+				self.distances.update({newNode: [baseNode, None]})
+
+				self.countTasksDone(newNode)
+				self.resolveWeights(baseNode, newNode)
+
+				self.distances.update({newNode: [baseNode, newNode.value + baseNode.value]})
+
+				newDistances.append((newNode, baseNode, newNode.value))
+				return newDistances
 
 
 	def dijkstra(self):
 
-		instance = 0
-		self.createNextNodeLine(instance)
-		distances = {self.graph.get(instance)[0]: [None, 0, self.graph.get(instance)[0]]}
+		totalChoices = 100
+		priorityQueue = []
+
 		
-		priorityQueue = {}
-		self.createNextNodeLine(instance + 1)
+		self.distances.update({self.startNode: [self.startNode, 0]})
 		
-
-
-
-		for baseNode in self.graph.get(instance):
-				for adj in self.graph.get(instance + 1):
-					priorityQueue.update({})
-
+		priorityQueue += self.createNextNodeLine(self.startNode) # Instance 0, "Acordar"
+		priorityQueue.sort(key=itemgetter(2))
+		
+		priorityQueue = priorityQueue[0:totalChoices]
+		
 		while priorityQueue:
-			self.createNextNodeLine(instance + 1)
-
-			for baseNode in self.graph.get(instance):
-				for adj in self.graph.get(instance + 1):
-
-					# Adding in the distances array
-					if adj not in distances:
-						distances.update({adj: [baseNode, baseNode.value + adj.value]})
-
-					elif baseNode.value + adj.value < distances.get(adj)[1]:
-						distances.update({adj: [baseNode, baseNode.value + adj.value]})
-
-
-			instance += 1
-		for index, i in enumerate(distances):
-			if distances.get(i)[0] != None:
-				print(f"{i.name}: {distances.get(i)[0].name}, {distances.get(i)[1]}")
-			else:
-				print(f"{i.name}: {distances.get(i)[2].name}, {distances.get(i)[1]}")
 			
-			if index in [x for x in range(0, len(distances), len(self.taskList))]:
-				print("\n")
+			current = priorityQueue.pop(0) if len(priorityQueue) > 0 else False
+			# print(self.timePassed(current[0]))
+			newNodes = self.createNextNodeLine(current[0])
+			# print(priorityQueue)
+			if not newNodes:
 
-		# for instance in range(1, depht + 1):
-		# 	inicialDist = [math.inf] * len(self.taskList)
-		# 	inicialPrev = [(None, None)] * len(self.taskList) 
-		# 	self.distances.update({instance: inicialDist})
-		# 	self.distancePrev.update({instance: inicialPrev})
-
-		# 	for index, node in enumerate(self.taskList):
-		# 		self.addWithPriority(node, self.distances[instance][index], instance)
-
-		# print(self.priorityQueue)
-
-
-		# if len(self.instanceList) > 3:
-		
-		
+				if self.endNode not in self.distances:
+					self.distances.update({self.endNode: [current[0], current[0].value]})
+				elif self.distances.get(self.endNode)[1] > current[0].value:
+					self.distances.update({self.endNode: [current[0], current[0].value]})
+			
+			else:
+				priorityQueue += newNodes
+				priorityQueue.sort(key=itemgetter(2))
+				priorityQueue = priorityQueue[0:totalChoices]
 
 
-
-
+	def createPath(self):
+		tmpNode = self.endNode
+		instance = self.needs.dayTotalTime + 1
+		path=[(tmpNode.name, instance)]
+		while self.distances[tmpNode][0].name != "Acordar":
+			tmpNode = self.distances.get(tmpNode)[0]
+			instance-=1
+			path.append((tmpNode.name, instance))
+		instance-=1
+		path.append((self.distances.get(tmpNode)[0].name, instance))
+		return path
 taskList = []
 
 
 taskList.append(TSK.task("a", 1, 5, True))
-taskList.append(TSK.task("b", 2, 5, True))
-taskList.append(TSK.task("c", 3, 9, True))
-taskList.append(TSK.task("d", 2, 90, True))
-taskList.append(TSK.task("Comer", 3, 0, True))
+taskList.append(TSK.task("b", 1, 5, True))
+taskList.append(TSK.task("c", 2, 9, True))
+taskList.append(TSK.task("d", 1, 90, True))
+taskList.append(TSK.task("Comer", 2, 0, True))
 
-t = optimizer(TSK.needs(5), taskList)
+t = optimizer(TSK.needs(960), taskList)
 
 
 t.dijkstra()
+# print(t.createPath()[::-1])

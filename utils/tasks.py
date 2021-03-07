@@ -1,3 +1,4 @@
+
 class needs:
 	def __init__(self, DayTotalTime=960, work=60, entertainment=30, other=10) -> None:
 
@@ -14,8 +15,16 @@ class needs:
 
 	def getPriority(self):
 		delta = [iTotal - iCompleted for iTotal, iCompleted in zip(self.total, self.completed)]
-		return self.delta.index(max(delta))
+		return delta.index(max(delta))
 
+	def resetCompleted(self):
+		self.completed = [0, 0, 0]
+		
+	def addToCompleted(self, index, value):
+		if self.completed[index] + value > self.total[index]:
+			self.completed[index] = self.total[index]
+		else:
+			self.completed[index] += value
 class task:
 	def __init__(self, name: str,  taskType: int, taskValue:float, create: bool) -> None:
 			"""
@@ -42,3 +51,5 @@ class task:
 
 			else:
 				self.value = taskValue
+
+r = needs()
