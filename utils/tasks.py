@@ -1,6 +1,6 @@
 
 class needs:
-	def __init__(self, DayTotalTime=960, work=60, entertainment=30, other=10) -> None:
+	def __init__(self, DayTotalTime=150, work=60, entertainment=30, other=10) -> None:
 
 			self.work = (100 * work) / sum([work, entertainment, other])
 			self.entertainment = (100 * entertainment) / sum([work, entertainment, other])
@@ -51,5 +51,9 @@ class task:
 
 			else:
 				self.value = taskValue
-
+	def subValue(self, value):
+		if self.value - value < 0:
+			self.value = 0
+		if self.value - value >= 10000:
+			self.value = 10000
 r = needs()

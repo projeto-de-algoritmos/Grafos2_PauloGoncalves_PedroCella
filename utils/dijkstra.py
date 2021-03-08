@@ -1,6 +1,6 @@
 import tasks as TSK
 from operator import itemgetter
-
+import math
 class optimizer:
 	def __init__(self, needs: TSK.needs, taskList: list) -> None:
 
@@ -29,18 +29,21 @@ class optimizer:
 		
 
 		if baseNode.name == "Comer" and newNode.name == "Comer":
-			newNode.value = baseNode.value + 100
-			print("Rolo")
+			newNode.value = baseNode.value + 10000
+		# (e-1)x-e+2\ 
+		elif newNode.name == "Comer" :
+			if newNode.value * (((math.e-1)*self.timePassed(newNode))  - math.e + 2) > 9999:
+				newNode.value = 0
+			else:
+				newNode.subValue(((math.e-1)*self.timePassed(newNode))  - math.e + 2)
 
-		elif newNode.name == "Comer" and self.timePassed(baseNode) in [x for x in range(3, self.needs.dayTotalTime, 3)]:
-			print("Olas")
-			newNode.value -= newNode.value * (1.5 / 100)
-		print(self.needs.getPriority())
-		if newNode.type is self.needs.getPriority():
-			
-			newNode.value -= newNode.value * (0.5 / 100)
+		if self.needs.completed[newNode.type] >= self.needs.total[newNode.type]:
+			newNode.value = math.inf
 			self.needs.resetCompleted()
-				
+
+		elif newNode.type is self.needs.getPriority():
+			newNode.subValue(newNode.value * ((self.timePassed(newNode)**math.e) - self.timePassed(newNode) + 1))
+			self.needs.resetCompleted()
 
 	def countTasksDone(self, node):
 		
@@ -70,27 +73,29 @@ class optimizer:
 				self.distances.update({newNode: [baseNode, newNode.value + baseNode.value]})
 
 				newDistances.append((newNode, baseNode, newNode.value))
-				return newDistances
+
+			return newDistances
 
 
 	def dijkstra(self):
 
-		totalChoices = 100
+		totalChoices = 500
 		priorityQueue = []
 
-		
 		self.distances.update({self.startNode: [self.startNode, 0]})
 		
 		priorityQueue += self.createNextNodeLine(self.startNode) # Instance 0, "Acordar"
 		priorityQueue.sort(key=itemgetter(2))
 		
 		priorityQueue = priorityQueue[0:totalChoices]
-		
+
 		while priorityQueue:
 			
 			current = priorityQueue.pop(0) if len(priorityQueue) > 0 else False
+			# 
 			# print(self.timePassed(current[0]))
 			newNodes = self.createNextNodeLine(current[0])
+			# print(newNodes)
 			# print(priorityQueue)
 			if not newNodes:
 
@@ -104,6 +109,7 @@ class optimizer:
 				priorityQueue.sort(key=itemgetter(2))
 				priorityQueue = priorityQueue[0:totalChoices]
 
+			
 
 	def createPath(self):
 		tmpNode = self.endNode
@@ -115,18 +121,47 @@ class optimizer:
 			path.append((tmpNode.name, instance))
 		instance-=1
 		path.append((self.distances.get(tmpNode)[0].name, instance))
-		return path
+		self.needs.resetCompleted()
+		self.countTasksDone(self.endNode)
+
+		postProcess = [[path[len(path) - 1][0], 0]]
+		j = 0
+		for i in path[len(path)::-1]:
+			if i[0] == postProcess[j][0]:
+				postProcess[j][1] += 1
+			else:
+				postProcess.append([i[0], 1])
+				j+=1
+	
+		return path[::-1], postProcess, self.needs.completed, self.needs.total
 taskList = []
 
 
-taskList.append(TSK.task("a", 1, 5, True))
-taskList.append(TSK.task("b", 1, 5, True))
-taskList.append(TSK.task("c", 2, 9, True))
-taskList.append(TSK.task("d", 1, 90, True))
-taskList.append(TSK.task("Comer", 2, 0, True))
+taskList.append(TSK.task("T", 0, 90, True))
+taskList.append(TSK.task("E", 1, 5, True))
+taskList.append(TSK.task("O", 2,11, True))
+taskList.append(TSK.task("E2", 1, 5, True))
+taskList.append(TSK.task("Comer", 2, 25, True))
 
-t = optimizer(TSK.needs(960), taskList)
+t = optimizer(TSK.needs(10), taskList)
 
 
 t.dijkstra()
-# print(t.createPath()[::-1])
+# print(t.distances)
+
+
+totalOfEachTaks = {}
+path, postProcessPath, completedTasks, totalTasks = t.createPath()[::]
+for i in postProcessPath:
+	if i[0] not in totalOfEachTaks:
+		totalOfEachTaks.update({i[0]: i[1]})
+	else:
+		num = i[1]
+		num += totalOfEachTaks.get(i[0])
+		totalOfEachTaks.update({i[0]: num})
+
+print(postProcessPath)
+print(totalTasks)
+print(completedTasks)
+print(totalOfEachTaks)
+print(len(t.distances))
