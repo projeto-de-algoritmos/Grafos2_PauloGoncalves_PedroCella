@@ -1,6 +1,11 @@
 from utils import tasks as TKS
+from prettytable import PrettyTable
 
 taskList = []
+
+x = PrettyTable()
+
+x.field_names = ["Nome da Tarefa", "Tipo de Tarefa", "Valor da Tarefa"]
 
 tempList = [["Estudar", "1", 50], ["Trabalhar", "1", 30], ["Dormir", 3, 20]]
 
@@ -25,6 +30,8 @@ for i in range(qtd_tarefas):
 
 		print("Por fim insira um valor que represente o peso da tarefa do seu ponto de vista. Um valor entre 1 e 100, sendo 1 - baixo e 100- alto\n")
 		valor = int(input("Valor da tarefa: "))
+
+		x.add_row([nome, tipo, valor])
 		
 		repetitions = [x for x in taskList if x.name == nome and x.type == tipo]
 		if repetitions:
@@ -35,14 +42,10 @@ for i in range(qtd_tarefas):
 		else:
 			taskList.append(TKS.task(nome, tipo - 1, valor, True))
 
+
 # Tabela de Tarefas
 
-print("# Nome da Tarefa # Tipo de Tarefa # Valor da Tarefa #")
-
-for tarefa in tempList:
-	print("#",tarefa[0]," "*(13-len(tarefa[0])),"#",
-	tarefa[1]," "*(13-len(str(tarefa[1]))),"#",
-	tarefa[2]," "*(14-len(str(tarefa[2]))),"#")
+print(x)
 
 # r = TKS.requirements()
 # t = TKS.task("Tomar Banho", 1, )
