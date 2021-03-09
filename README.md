@@ -33,7 +33,7 @@ Onde temos apenas 1 ponto de encontro entre as 2 que é no momento que o node de
  
 <p1>Como o grafo gerado foi uma árvore, nós não poderíamos ter muitas instâncias de tempo passando pois caso uma pessoa coloque que tem que fazer 5 tarefas no dia e caso a gente decida dividir para passar o tempo de 1 em 1 minuto isso quer dizer que o dijkstra pode escolher uma nova tarefa todo minuto teríamos um total de 5^(960) nodes, por essa razão adotamos 2 estratégias para diminuir esse numero:</p1>
 1. Diminuir o tempo que se pode fazer a decisão então de 960 escolhemos 150 o que quer dizer que cada escolha de node representa um tempo de 6,4 minutos.
-2. Durante a fase da lista de prioridades pegamos apenas as primeiras 500 melhores escolhas, e desistimos do resto.
+2. Durante a fase da lista de prioridades pegamos apenas as primeiras 500 melhores escolhas, e descartamos do resto.
    
 Por causa da segunda estratégia que escolhemos, não podemos dizer com a certeza que o caminho escolhido é o melhor caminho, mas ele é um dos melhores, se não o melhor, mas não podemos ter a certeza por jogarmos fora algumas escolhas.
  
@@ -44,8 +44,8 @@ OBS:. Caso você queira alterar essas propriedades de quanto tempo cada escolha 
  
  
 ## Screenshots
-![Screenshot2](./docs)
-![Screenshot3](./docs)
+![Screenshot2](./docs/screenshot2.png)
+![Screenshot3](./docs/screenshot1.png)
  
 ## Instalação 
 **Linguagem**: Python<br>

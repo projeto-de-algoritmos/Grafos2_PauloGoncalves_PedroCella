@@ -13,7 +13,7 @@ print("Bem-vindo(a) ao Gerenciador de Tarefas!\n")
 
 print("Para começar a utilizá-lo nos informe o o peso das atividades, o número de tarefas que deseja gerenciar,o nome dessa tarefa, seu tipo e seu valor\n")
 
-print("Defina num total de 100%, o peso de cada tarefa:\n")
+print("Defina num total de 100%, recomenda-se Trabalho: 60, Entreterimento: 30 e Outros: 10, o peso de cada tarefa:\n")
 work = int(input("Trabalho: "))
 entertainment = int(input("Entreterimento: "))
 other = int(input("Outros: "))
@@ -33,8 +33,9 @@ for i in range(qtd_tarefas):
 			tipo = int(input("1-Trabalho;\n2-Entreterimento;\n3-Outros\n"))
 						
 
-		print("Por fim insira um valor que represente o peso da tarefa do seu ponto de vista. Um valor entre 1 e 100, sendo 1 - baixo e 100- alto\n")
+		print("Por fim insira um valor que represente o peso da tarefa do seu ponto de vista. Um valor entre 1 e 100, sendo 1 - baixo e 100- alto")
 		valor = int(input("Valor da tarefa: "))
+		print("\n")
 
 		table.add_row([nome, tipo, valor])
 		
