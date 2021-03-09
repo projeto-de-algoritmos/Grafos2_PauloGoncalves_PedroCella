@@ -1,11 +1,14 @@
-import tasks as TSK
+from .tasks import task as TKS
+from .tasks import needs as ND
 from operator import itemgetter
+from prettytable import PrettyTable
 import math
-class optimizer:
-	def __init__(self, needs: TSK.needs, taskList: list) -> None:
 
-			self.startNode = TSK.task("Acordar", 4, 10000, True)
-			self.endNode = TSK.task("Dormir", 4, 10000, True)
+class optimizer:
+	def __init__(self, needs: ND, taskList: list) -> None:
+
+			self.startNode = TKS("Acordar", 3, 10000, True)
+			self.endNode = TKS("Dormir", 3, 10000, True)
 
 			self.needs = needs
 			self.taskList = taskList
@@ -26,24 +29,45 @@ class optimizer:
 
 
 	def resolveWeights(self, baseNode, newNode):
-		
+		"""
+		Função que 
+		"""
 
 		if baseNode.name == "Comer" and newNode.name == "Comer":
 			newNode.value = baseNode.value + 10000
 		# (e-1)x-e+2\ 
 		elif newNode.name == "Comer" :
-			if newNode.value * (((math.e-1)*self.timePassed(newNode))  - math.e + 2) > 9999:
+			if self.needs.completed[newNode.type] >= self.needs.total[newNode.type]:
+				newNode.value = math.inf
+				self.needs.resetCompleted()
+			elif newNode.value * (((math.e-1)*self.sameTaksB4(newNode))  - math.e + 2) > 9999:
 				newNode.value = 0
 			else:
-				newNode.subValue(((math.e-1)*self.timePassed(newNode))  - math.e + 2)
+				newNode.subValue(((math.e-1)*self.sameTaksB4(newNode))  - math.e + 2)
+		else:
+			if self.needs.completed[newNode.type] >= self.needs.total[newNode.type]:
+				newNode.value = math.inf
+				self.needs.resetCompleted()
 
-		if self.needs.completed[newNode.type] >= self.needs.total[newNode.type]:
-			newNode.value = math.inf
-			self.needs.resetCompleted()
+			elif newNode.type is self.needs.getPriority():
+				newNode.subValue(newNode.value * ((self.sameTaksB4(newNode)**math.e) - self.sameTaksB4(newNode) + 1))
+				self.needs.resetCompleted()
 
-		elif newNode.type is self.needs.getPriority():
-			newNode.subValue(newNode.value * ((self.timePassed(newNode)**math.e) - self.timePassed(newNode) + 1))
-			self.needs.resetCompleted()
+
+	def sameTaksB4(self, node):
+		"""
+		Conta quantas tarefas iguais ao node que foi passado foram feitas anteriomente.
+		"""
+		sameTasks = 0
+		tmpNode = node
+		while self.distances[tmpNode][0].name != "Acordar":
+			if self.distances[tmpNode][0].name == node.name:
+				sameTasks+=1
+			else:
+				break
+			tmpNode = self.distances.get(tmpNode)[0]
+		return sameTasks
+
 
 	def countTasksDone(self, node):
 		
@@ -58,12 +82,12 @@ class optimizer:
 	def createNextNodeLine(self, baseNode):
 			newDistances = []
 
-			if self.timePassed(baseNode) >= self.needs.dayTotalTime or not baseNode:
+			if self.timePassed(baseNode) >= self.needs.dayTotalTime +2 or not baseNode:
 				return False			
 			
 			for tmpNode in self.taskList:
 
-				newNode = TSK.task(tmpNode.name, tmpNode.type, tmpNode.value, False)
+				newNode = TKS(tmpNode.name, tmpNode.type, tmpNode.value, False)
 
 				self.distances.update({newNode: [baseNode, None]})
 
@@ -81,7 +105,6 @@ class optimizer:
 
 		totalChoices = 500
 		priorityQueue = []
-
 		self.distances.update({self.startNode: [self.startNode, 0]})
 		
 		priorityQueue += self.createNextNodeLine(self.startNode) # Instance 0, "Acordar"
@@ -95,8 +118,7 @@ class optimizer:
 			# 
 			# print(self.timePassed(current[0]))
 			newNodes = self.createNextNodeLine(current[0])
-			# print(newNodes)
-			# print(priorityQueue)
+			
 			if not newNodes:
 
 				if self.endNode not in self.distances:
@@ -108,8 +130,6 @@ class optimizer:
 				priorityQueue += newNodes
 				priorityQueue.sort(key=itemgetter(2))
 				priorityQueue = priorityQueue[0:totalChoices]
-
-			
 
 	def createPath(self):
 		tmpNode = self.endNode
@@ -134,34 +154,3 @@ class optimizer:
 				j+=1
 	
 		return path[::-1], postProcess, self.needs.completed, self.needs.total
-taskList = []
-
-
-taskList.append(TSK.task("T", 0, 90, True))
-taskList.append(TSK.task("E", 1, 5, True))
-taskList.append(TSK.task("O", 2,11, True))
-taskList.append(TSK.task("E2", 1, 5, True))
-taskList.append(TSK.task("Comer", 2, 25, True))
-
-t = optimizer(TSK.needs(10), taskList)
-
-
-t.dijkstra()
-# print(t.distances)
-
-
-totalOfEachTaks = {}
-path, postProcessPath, completedTasks, totalTasks = t.createPath()[::]
-for i in postProcessPath:
-	if i[0] not in totalOfEachTaks:
-		totalOfEachTaks.update({i[0]: i[1]})
-	else:
-		num = i[1]
-		num += totalOfEachTaks.get(i[0])
-		totalOfEachTaks.update({i[0]: num})
-
-print(postProcessPath)
-print(totalTasks)
-print(completedTasks)
-print(totalOfEachTaks)
-print(len(t.distances))

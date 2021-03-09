@@ -7,9 +7,9 @@ class needs:
 			self.other = (100 * other) / sum([work, entertainment, other])
 
 
-			self.total = [DayTotalTime * (self.work / 100), DayTotalTime * (self.entertainment / 100), DayTotalTime * (self.other / 100)]
+			self.total = [DayTotalTime * (self.work / 100), DayTotalTime * (self.entertainment / 100), DayTotalTime * (self.other / 100), 2]
 
-			self.completed = [0, 0, 0]
+			self.completed = [0, 0, 0, 0]
 			
 			self.dayTotalTime = DayTotalTime
 
@@ -18,7 +18,7 @@ class needs:
 		return delta.index(max(delta))
 
 	def resetCompleted(self):
-		self.completed = [0, 0, 0]
+		self.completed = [0, 0, 0, 0]
 		
 	def addToCompleted(self, index, value):
 		if self.completed[index] + value > self.total[index]:
@@ -32,7 +32,7 @@ class task:
 				O nome da tarefa.
 
 			taskType: int
-				O tipo da tarefa, 1 - Trabalho, 2 - Entreterimento, 3 - Outro(s).
+				O tipo da tarefa, 0 - Trabalho, 1 - Entreterimento, 2 - Outro(s), 3 - Nodes especiais.
 
 			taskValue: int
 				A quantidade que essa tarefa vale para o seu tipo tarefa.
@@ -51,9 +51,10 @@ class task:
 
 			else:
 				self.value = taskValue
+
+
 	def subValue(self, value):
 		if self.value - value < 0:
 			self.value = 0
 		if self.value - value >= 10000:
 			self.value = 10000
-r = needs()
