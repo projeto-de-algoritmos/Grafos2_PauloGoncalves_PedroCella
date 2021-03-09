@@ -49,6 +49,7 @@ for i in range(qtd_tarefas):
 		else:
 			taskList.append(TSK.task(nome, tipo - 1, valor, True))
 
+table.add_row(["Comer", 4, 25])
 taskList.append(TSK.task("Comer", 3, 25, True))
 # Tabela de Tarefas
 
@@ -68,11 +69,15 @@ hTable = PrettyTable()
 hTable.field_names = ["Horario", "Tarefa"]
 
 hour = 21600
-hTable.add_row([time.strftime("%H:%M:%S", time.gmtime(hour)) , "Acordar"])
+prevH = hour
+hTable.add_row([time.strftime("%H:%M:%S", time.gmtime(prevH)) + " - " +time.strftime("%H:%M:%S", time.gmtime(hour)) , "Acordar"])
 for i in postProcessPath[1::]:
 	hour += ((i[1] * (960 / dayDivision)) * 60)
-	hTable.add_row([time.strftime("%H:%M:%S", time.gmtime(hour)) , i[0]])
-
+	if i[0] != "Dormir":
+		hTable.add_row([time.strftime("%H:%M:%S", time.gmtime(prevH)) + " - " +time.strftime("%H:%M:%S", time.gmtime(hour)), i[0]])
+		prevH = hour
+	else:
+		hTable.add_row([time.strftime("%H:%M:%S", time.gmtime(prevH)) + " - " +time.strftime("%H:%M:%S", time.gmtime(prevH)), i[0]])
 print("")
 print(hTable)
 

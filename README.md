@@ -81,11 +81,7 @@ python3 demo.py
 ```
  
 ## Apresentação: 
-<figure class="Apresentação">
-  <video controls="true" allowfullscreen="true" poster="./docs/RepresentacaoGrafo.png">
-    <source src="./docs/Apresentacao.mp4" type="video/mp4">
-  </video>
-</figure>
+Faça o download da apresentação [aqui](https://github.com/projeto-de-algoritmos/Grafos2_Task_Manager/raw/master/docs/Apresentacao.mp4)
  
  
  

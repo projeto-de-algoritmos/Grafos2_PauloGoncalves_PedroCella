@@ -6,7 +6,7 @@ class needs:
 			self.work = (100 * work) / sum([work, entertainment, other])
 			self.entertainment = (100 * entertainment) / sum([work, entertainment, other])
 			self.other = (100 * other) / sum([work, entertainment, other])
-
+			
 			# O total que se precisa ser feito durante o dia.
 			self.total = [DayTotalTime * (self.work / 100), DayTotalTime * (self.entertainment / 100), DayTotalTime * (self.other / 100), 2]
 
