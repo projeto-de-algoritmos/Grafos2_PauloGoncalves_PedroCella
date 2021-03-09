@@ -33,18 +33,14 @@ Onde temos apenas 1 ponto de encontro entre as 2 que é no momento que o node de
  
 <p1>Como o grafo gerado foi uma árvore, nós não poderíamos ter muitas instâncias de tempo passando pois caso uma pessoa coloque que tem que fazer 5 tarefas no dia e caso a gente decida dividir para passar o tempo de 1 em 1 minuto isso quer dizer que o dijkstra pode escolher uma nova tarefa todo minuto teríamos um total de 5^(960) nodes, por essa razão adotamos 2 estratégias para diminuir esse numero:</p1>
 1. Diminuir o tempo que se pode fazer a decisão então de 960 escolhemos 150 o que quer dizer que cada escolha de node representa um tempo de 6,4 minutos.
-<<<<<<< HEAD
 2. Durante a fase da lista de prioridades pegamos apenas as primeiras 500 melhores escolhas, e descartamos o resto.
-=======
-2. Durante a fase da lista de prioridades pegamos apenas as primeiras 500 melhores escolhas, e descartamos do resto.
->>>>>>> 06a3c9f833cf1fc60c2a977e132d2d2ab54edcad
    
 Por causa da segunda estratégia que escolhemos, não podemos dizer com a certeza que o caminho escolhido é o melhor caminho, mas ele é um dos melhores, se não o melhor, mas não podemos ter a certeza por jogarmos fora algumas escolhas.
  
 Mesmo com as 2 estratégias o total de nodes gerados no exemplo acima foi de 427562 nodes.
 <br>
 <br>
-OBS:. Caso você queira alterar essas propriedades de quanto tempo cada escolha representa e quanto jogamos fora da lista de prioridades os 2 estão nas linhas 85 do arquivo Dijkstra e na linha 50 do arquivo Demo respectivamente
+OBS:. Caso você queira alterar essas propriedades de quanto tempo cada escolha representa e quanto jogamos fora da lista de prioridades os 2 estão nas linhas 120 do arquivo Dijkstra e na linha 50 do arquivo Demo respectivamente
  
  
 ## Screenshots
@@ -73,11 +69,16 @@ Pip<br>
 ```
 python -m pip install -U prettytable
 ```
- 
-**OBS:** Nós não conseguimos instalar pelo pip, por isso deixamos a opção do Linux caso passe pelo mesmo problema
+Ou
+```
+pip3 install prettytable
+```
  
 ## Uso 
-Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
+Execute a demo com:
+```
+python3 demo.py
+```
  
 ## Outros 
 <p>Aqui se encontra o vídeo explicativo do projeto, <a id="video-explicativo" href="">baixe</a> ou veja-o online <a id="video-explicativo" href="">aqui</a></p>

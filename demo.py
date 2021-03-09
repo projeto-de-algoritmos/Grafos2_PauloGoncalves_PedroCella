@@ -2,6 +2,7 @@ from utils import tasks as TSK
 from utils import dijkstra as DK
 from prettytable import PrettyTable
 import time 
+
 taskList = []
 
 table = PrettyTable()
@@ -54,11 +55,11 @@ taskList.append(TSK.task("Comer", 3, 25, True))
 print("")
 print(table)
 
-dayDivision = 150
-result = DK.optimizer(TSK.needs(dayDivision, work, entertainment, other), taskList)
+dayDivision = 150 # Divisão do dia.
+result = DK.optimizer(TSK.needs(dayDivision, work, entertainment, other), taskList) # inicializando o optimizador das tarefas.
 
 print("Calculando....\n")
-result.dijkstra()
+result.dijkstra() # Fazendo o calculo do dijkstra.
 
 path, postProcessPath, completedTasks, totalTasks  = result.createPath()
 
