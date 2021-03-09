@@ -80,8 +80,12 @@ Execute a demo com:
 python3 demo.py
 ```
  
-## Outros 
-<p>Aqui se encontra o vídeo explicativo do projeto, <a id="video-explicativo" href="">baixe</a> ou veja-o online <a id="video-explicativo" href="">aqui</a></p>
+## Apresentação: 
+<figure class="Apresentação">
+  <video controls="true" allowfullscreen="true" poster="./docs/RepresentacaoGrafo.png">
+    <source src="./docs/Apresentacao.mp4" type="video/mp4">
+  </video>
+</figure>
  
  
  
